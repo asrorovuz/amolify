@@ -1,12 +1,14 @@
-import { useState } from "react";
-import ContactTable from "./table";
-import { ToastContainer } from "react-toastify";
-import { Box, Button, Dialog, Typography } from "@mui/material";
-import ContactForm from "./form";
-import useFetch from "./hooks/fetchApi";
+import { useEffect, useState } from "react";
 import { ISingleData } from "./types/data";
+import useFetch from "./hooks/fetchApi";
+import { Box } from "@mui/system";
+import { Button, CircularProgress, Dialog, Typography } from "@mui/material";
+import { ToastContainer } from "react-toastify";
+import ContactTable from "./table";
+import ContactForm from "./form";
 
 function App() {
+  const [appLoading, setAppLoading] = useState(true);
   const [openModalEdit, setOpenModalEdit] = useState(false);
   const [openModalAdd, setOpenModalAdd] = useState(false);
   const [singleData, setSingleData] = useState<ISingleData | null>(null);
@@ -28,7 +30,17 @@ function App() {
     setType(null);
   };
 
-  return (
+  useEffect(() => {
+    setTimeout(() => {
+      setAppLoading(false);
+    }, 1000);
+  }, []);
+
+  return appLoading ? (
+    <Box sx={{ width: "100%", height: "100vh", display: "flex", justifyContent: "center", alignItems: "center" }}>
+      <CircularProgress />
+    </Box>
+  ) : (
     <>
       <ToastContainer />
 
@@ -60,7 +72,7 @@ function App() {
         />
       </Box>
 
-      {/* edit  */}
+      {/* edit */}
       <Dialog
         open={openModalEdit}
         onClose={handleClose}
@@ -77,7 +89,7 @@ function App() {
         />
       </Dialog>
 
-      {/* add  */}
+      {/* add */}
       <Dialog
         open={openModalAdd}
         onClose={handleClose}
